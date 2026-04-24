@@ -11,11 +11,11 @@
 
 ## 🧬 Method
 
-`flash-scope` is the lightweight and speedy successor to `steroscope` :zap:.
+`flash-scope` is the lightweight and speedy successor to [stereoscope](https://github.com/almaan/stereoscope) :zap:.
 The code has been optimized, but we've also changed the parameter estimation
-algorithm from MLE to Method of Moments, which allows for extermenly fast
+algorithm from MLE to Method of Moments, which allows for extremely fast
 inference of the cell type level negative binomial parameters used to
-deconvolve the spatial data. In addition to these improvments, we provide a
+deconvolve the spatial data. In addition to these improvements, we provide a
 user-friendly API as well as an MCP layer for AI-integrations.
 
 `flash-scope`, just like `stereoscope`, estimates cell type proportions in
@@ -48,13 +48,19 @@ pip install -e ".[dev,mcp]"
 
 ## 🚀 Quick start
 
+End-to-end deconvolution in one call:
+
 ```python
 import flash_scope as fs
 
-# one-liner
 props = fs.tl.deconvolve(ad_sc, ad_sp, label_col="cell_type")
+```
 
-# step-by-step
+`deconvolve` handles preprocessing, parameter estimation, model fitting, and proportion extraction. For more control, use the step-by-step API:
+
+```python
+import flash_scope as fs
+
 ad_sc, ad_sp = fs.pp.preprocess(ad_sc, ad_sp, label_col="cell_type")
 R, P, labels = fs.model.estimate_nb_params(ad_sc, label_col="cell_type", return_labels=True)
 
