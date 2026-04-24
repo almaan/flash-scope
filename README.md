@@ -1,22 +1,42 @@
-# flash-scope
+# :zap: flash-scope
 
-Fast spatial transcriptomics deconvolution using negative binomial mixture models.
+[![PyPI](https://img.shields.io/pypi/v/flash-scope)](https://pypi.org/project/flash-scope/)
+[![Python](https://img.shields.io/pypi/pyversions/flash-scope)](https://pypi.org/project/flash-scope/)
+[![Downloads](https://img.shields.io/pypi/dm/flash-scope)](https://pypi.org/project/flash-scope/)
+<!-- [![Docs](https://img.shields.io/badge/docs-TODO-blue)](https://TODO) -->
+<!-- [![Paper](https://img.shields.io/badge/paper-TODO-green)](https://TODO) -->
+<!-- [![Old Repo](https://img.shields.io/badge/old_repo-RapidScope-grey)](https://TODO) -->
 
-## Method
+> 🔬 Fast spatial transcriptomics deconvolution using negative binomial mixture models.
 
-Flash-scope estimates cell type proportions in spatial transcriptomics data by fitting a negative binomial (NB) mixture model. Given a single-cell RNA-seq reference with cell type labels and a spatial dataset:
+## 🧬 Method
 
-1. **NB parameter estimation** — Per-gene, per-cell-type NB parameters (r, p) are estimated from the reference using method-of-moments, with optional GPU acceleration for large references.
+`flash-scope` is the lightweight and speedy successor to `steroscope` :zap:.
+The code has been optimized, but we've also changed the parameter estimation
+algorithm from MLE to Method of Moments, which allows for extermenly fast
+inference of the cell type level negative binomial parameters used to
+deconvolve the spatial data. In addition to these improvments, we provide a
+user-friendly API as well as an MCP layer for AI-integrations.
 
-2. **Mixture model fitting** — A PyTorch model learns per-spot mixing weights over cell types, gene-level scaling factors, and a background expression term. The spatial counts are modeled as a mixture of the reference NB distributions. The model is trained by maximizing the NB log-likelihood.
+`flash-scope`, just like `stereoscope`, estimates cell type proportions in
+spatial transcriptomics data by fitting a negative binomial (NB) mixture model.
+Given a single-cell RNA-seq reference with cell type labels and a spatial
+dataset:
 
-3. **Proportion extraction** — Learned mixing weights are normalized via softplus to produce non-negative proportions that sum to one per spot.
+1. 📊 **NB parameter estimation** — Per-gene, per-cell-type NB parameters (r, p) are estimated from the reference using method-of-moments, with optional GPU acceleration for large references.
 
-<!-- TODO: describe how this differs from RapidScope / earlier versions -->
+2. 🧮 **Mixture model fitting** — A PyTorch model learns per-spot mixing weights over cell types, gene-level scaling factors, and a background expression term. The spatial counts are modeled as a mixture of the reference NB distributions. The model is trained by maximizing the NB log-likelihood.
 
-## Install
+3. 📈 **Proportion extraction** — Learned mixing weights are normalized via softplus to produce non-negative proportions that sum to one per spot.
+
+
+## 📦 Install
 
 ```bash
+git clone https://github.com/almaan/flash-scope.git
+
+cd flash-scope
+
 pip install flash-scope
 
 # with MCP server support
@@ -26,7 +46,7 @@ pip install "flash-scope[mcp]"
 pip install -e ".[dev,mcp]"
 ```
 
-## Quick start
+## 🚀 Quick start
 
 ```python
 import flash_scope as fs
@@ -46,7 +66,7 @@ model = fs.model.fit(model, ad_sp, epochs=500, device="auto")
 props = model.get_proportions()  # (n_spots, n_types) numpy array
 ```
 
-## I/O adapters
+## 💾 I/O adapters
 
 All adapters produce AnnData objects:
 
@@ -56,7 +76,7 @@ ad_sp = fs.io.read_parquet("spatial.parquet", obs_columns=["x", "y"])
 ad_sp = fs.io.read_csv("spatial.csv", gene_columns=["GeneA", "GeneB"])
 ```
 
-## Preprocessing
+## 🧹 Preprocessing
 
 ```python
 # full pipeline
@@ -76,7 +96,7 @@ ad_sc, ad_sp = fs.pp.intersect_vars(ad_sc, ad_sp)
 ad_sp = fs.pp.densify(ad_sp)  # sparse -> dense
 ```
 
-## GPU acceleration
+## ⚡ GPU acceleration
 
 ```python
 # model training (auto-detects CUDA)
@@ -88,7 +108,7 @@ R, P = fs.model.estimate_nb_params(ad_sc, label_col="cell_type", backend="torch"
 
 When running on CUDA, the trainer applies `torch.compile` and mixed-precision (`float16`) automatically.
 
-## MCP server
+## 🤖 MCP server
 
 Flash-scope includes an MCP server so LLM agents (Claude, etc.) can run deconvolution interactively.
 
@@ -137,7 +157,7 @@ from flash_scope.mcp import serve
 serve()
 ```
 
-## API reference
+## 📖 API reference
 
 ### `fs.tl.deconvolve(ad_sc, ad_sp, label_col, **kwargs) -> DataFrame`
 
@@ -154,3 +174,7 @@ PyTorch module. Call `.get_proportions()` after fitting for a `(n_spots, n_types
 ### `fs.model.fit(model, adata, epochs=500, batch_size=1024, device="auto") -> model`
 
 Train the model. Returns fitted model on CPU.
+
+
+## Example
+
