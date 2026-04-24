@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flash-scope"
+version = "0.1.0"
+description = "Fast spatial transcriptomics deconvolution via negative binomial mixture models"
+requires-python = ">=3.10"
+dependencies = [
+    "anndata>=0.10",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "torch>=2.0",
+    "scanpy>=1.9",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+mcp = ["fastmcp>=2.0"]
+dev = ["pytest>=7.0", "pytest-cov"]
+
+[tool.setuptools.packages.find]
+include = ["flash_scope*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
