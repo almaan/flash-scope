@@ -12,6 +12,12 @@ def read_parquet(
     gene_columns: list[str] | None = None,
     obs_columns: list[str] | None = None,
 ) -> ad.AnnData:
+    """Read a Parquet file into an AnnData object.
+
+    Numeric columns become the expression matrix; ``obs_columns`` are
+    placed in ``.obs``. If ``gene_columns`` is None, all numeric columns
+    not in ``obs_columns`` are used.
+    """
     df = pd.read_parquet(Path(path))
     return _df_to_anndata(df, gene_columns=gene_columns, obs_columns=obs_columns)
 

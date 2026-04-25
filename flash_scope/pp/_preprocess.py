@@ -9,6 +9,7 @@ from flash_scope._utils import to_dense_array
 
 
 def filter_by_label(adata: ad.AnnData, label_col: str, min_count: int = 20) -> ad.AnnData:
+    """Drop cell types with fewer than ``min_count`` cells."""
     vc = adata.obs[label_col].value_counts()
     keep = vc.index[vc >= min_count].values
     mask = np.isin(adata.obs[label_col].values, keep)
@@ -16,6 +17,7 @@ def filter_by_label(adata: ad.AnnData, label_col: str, min_count: int = 20) -> a
 
 
 def filter_genes(adata: ad.AnnData, min_counts: int = 100) -> ad.AnnData:
+    """Remove genes with total counts below ``min_counts``."""
     adata = adata.copy()
     sc.pp.filter_genes(adata, min_counts=min_counts)
     return adata
@@ -26,6 +28,7 @@ def intersect_vars(
     ad_sp: ad.AnnData,
     gene_list: list[str] | None = None,
 ) -> tuple[ad.AnnData, ad.AnnData]:
+    """Subset both datasets to shared genes (optionally filtered by ``gene_list``)."""
     inter = ad_sc.var_names.intersection(ad_sp.var_names)
     if gene_list is not None:
         inter = pd.Index(gene_list).intersection(inter)
@@ -33,6 +36,7 @@ def intersect_vars(
 
 
 def densify(adata: ad.AnnData) -> ad.AnnData:
+    """Convert sparse ``.X`` to a dense numpy array."""
     adata = adata.copy()
     adata.X = to_dense_array(adata.X)
     return adata
@@ -47,6 +51,7 @@ def preprocess(
     min_sc_counts: int = 100,
     min_sp_counts: int = 100,
 ) -> tuple[ad.AnnData, ad.AnnData]:
+    """Full preprocessing pipeline: filter labels, filter genes, intersect, densify."""
     ad_sc = ad_sc.copy()
     ad_sp = ad_sp.copy()
     ad_sc.var_names_make_unique()

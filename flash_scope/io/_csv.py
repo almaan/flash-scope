@@ -14,5 +14,10 @@ def read_csv(
     obs_columns: list[str] | None = None,
     **kwargs,
 ) -> ad.AnnData:
+    """Read a CSV file into an AnnData object.
+
+    Extra ``**kwargs`` are passed to ``pd.read_csv``. See
+    :func:`read_parquet` for column selection logic.
+    """
     df = pd.read_csv(Path(path), **kwargs)
     return _df_to_anndata(df, gene_columns=gene_columns, obs_columns=obs_columns)

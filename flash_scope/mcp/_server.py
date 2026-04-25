@@ -83,7 +83,7 @@ def _fit(
     state.labels = list(labels)
 
     model = FlashScopeModel(
-        r=R.values, p=P.values,
+        r=R.values, logits=P.values,
         n_spots=state.ad_sp.n_obs,
         n_types=len(labels),
         n_genes=state.ad_sp.n_vars,
@@ -114,6 +114,7 @@ def _get_proportions(state: ServerState, top_n: int = 5) -> str:
 
 
 def create_server() -> FastMCP:
+    """Create and return a configured FastMCP server with deconvolution tools."""
     mcp = FastMCP("flash-scope")
     state = ServerState()
 
@@ -151,5 +152,6 @@ def create_server() -> FastMCP:
 
 
 def serve():
+    """Start the flash-scope MCP server."""
     mcp = create_server()
     mcp.run()

@@ -1,14 +1,5 @@
 # :zap: flash-scope
 
-[![PyPI](https://img.shields.io/pypi/v/flash-scope)](https://pypi.org/project/flash-scope/)
-[![Python](https://img.shields.io/pypi/pyversions/flash-scope)](https://pypi.org/project/flash-scope/)
-[![Downloads](https://img.shields.io/pypi/dm/flash-scope)](https://pypi.org/project/flash-scope/)
-<!-- [![Docs](https://img.shields.io/badge/docs-TODO-blue)](https://TODO) -->
-<!-- [![Paper](https://img.shields.io/badge/paper-TODO-green)](https://TODO) -->
-<!-- [![Old Repo](https://img.shields.io/badge/old_repo-RapidScope-grey)](https://TODO) -->
-
-> 🔬 Fast spatial transcriptomics deconvolution using negative binomial mixture models.
-
 ## 🧬 Method
 
 `flash-scope` is the lightweight and speedy successor to [stereoscope](https://github.com/almaan/stereoscope) :zap:.
@@ -32,6 +23,8 @@ dataset:
 
 ## 📦 Install
 
+### GitHub
+
 ```bash
 git clone https://github.com/almaan/flash-scope.git
 
@@ -45,6 +38,8 @@ pip install "flash-scope[mcp]"
 # development
 pip install -e ".[dev,mcp]"
 ```
+### 
+PyPI <Coming Soon> 
 
 ## 🚀 Quick start
 
@@ -183,4 +178,46 @@ Train the model. Returns fitted model on CPU.
 
 
 ## Example
+Results on the human developmental heart, same as in [Figure 3](https://www.nature.com/articles/s42003-020-01247-y/figures/3) in the original [publication](https://www.nature.com/articles/s42003-020-01247-y). 
+
+The analysis was run with the following command:
+```python
+
+%%timeit
+import flash_scope as fs
+props = fs.tl.deconvolve(ad_sc,
+                         ad_sp,
+                         label_col='celltype',
+                         epochs=5000,
+                         verbose = True,
+                         warm_start=True,
+                         gene_list=hvg_list,
+                         shrinkage=True, 
+                         patience=-1)
+                         
+```
+producing:
+```
+[flash-scope] after filtering: 590 genes, 12 cell types
+[flash-scope] NB params estimated for 12 types x 590 genes
+[flash-scope] computing NNLS warm-start for mixing weights
+[flash-scope] fitting on cuda (5000 epochs, batch_size=1024)
+[flash-scope]   epoch    1/5000  loss=255059.2656
+[flash-scope]   epoch  501/5000  loss=150093.8438
+[flash-scope]   epoch 1001/5000  loss=146266.0000
+[flash-scope]   epoch 1501/5000  loss=145368.7812
+[flash-scope]   epoch 2001/5000  loss=144834.5000
+[flash-scope]   epoch 2501/5000  loss=144630.1406
+[flash-scope]   epoch 3001/5000  loss=144554.1562
+[flash-scope]   epoch 3501/5000  loss=144528.5469
+[flash-scope]   epoch 4001/5000  loss=144518.2969
+[flash-scope]   epoch 4501/5000  loss=144512.0000
+[flash-scope]   epoch 5000/5000  loss=144509.1406
+[flash-scope] preprocessing (159 spots, 3777 cells)
+```
+
+and with a time of: `9.95 s ± 133 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)`
+
+The results are:
+<img src="imgs/devheart.png">
 

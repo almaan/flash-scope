@@ -6,6 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "flash-scope"
 version = "0.1.0"
 description = "Fast spatial transcriptomics deconvolution via negative binomial mixture models"
+authors = [
+    { name = "Alma Andersson", email = "alma.andersson@differentiable.net" },
+]
 requires-python = ">=3.10"
 dependencies = [
     "anndata>=0.10",
